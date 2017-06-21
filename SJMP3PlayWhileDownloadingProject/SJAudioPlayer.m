@@ -105,15 +105,15 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
         
         [self _SJAudioPlayerInitialize];
         
-        [self _DBAddObservers];
+        [self _SJAddObservers];
         
     }
     return self;
 }
 
 - (void)dealloc {
-    [self _DBRemoveObservers];
-    [self _DBClearTimer];
+    [self _SJRemoveObservers];
+    [self _SJClearTimer];
 }
 
 // MARK: Public
@@ -142,8 +142,8 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     
     self.currentPlayingURLStr = playURL;
     
-    if ( _DBCacheExistsWithURLStr(playURL) || [playURL hasPrefix:@"file"]  )[self _DBPlayLocalCacheWithURLStr:playURL];
-    else [self _DBStartDownloadWithURLStr:playURL];
+    if ( _SJCacheExistsWithURLStr(playURL) || [playURL hasPrefix:@"file"]  )[self _SJPlayLocalCacheWithURLStr:playURL];
+    else [self _SJStartDownloadWithURLStr:playURL];
 }
 
 /**
@@ -153,7 +153,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     if ( !self.audioPlayer ) return;
     
     NSTimeInterval reachableTime = 0;
-    NSString *hashStr = [self _DBGetAudioPlayerItemPathMemoryHashKey];
+    NSString *hashStr = [self _SJGetAudioPlayerItemPathMemoryHashKey];
     if ( hashStr ) reachableTime = [self.reachableTimeDictM[hashStr] integerValue];
     else reachableTime = self.audioPlayer.duration;
     
@@ -208,9 +208,9 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     if ( !ItemPath ) return;
     if ( [ItemPath hasPrefix:@"file"] ) /* file:// */ ItemPath = [ItemPath substringFromIndex:7];
     
-    NSString *hashKey = [self _DBGetAudioPlayerItemPathMemoryHashKey];
+    NSString *hashKey = [self _SJGetAudioPlayerItemPathMemoryHashKey];
     
-    if ( hashKey ) [self _DBClearMemoryDictCacheWithURLHashStr:hashKey];
+    if ( hashKey ) [self _SJClearMemoryDictCacheWithURLHashStr:hashKey];
     
     [self.audioPlayer stop];
     _audioPlayer = nil;
@@ -226,32 +226,32 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
 - (void)clearDiskAudioCache {
     if ( self.audioPlayer ) [self.audioPlayer stop];
     
-    if ( _DBCacheFolderPath() )
-        [_DBCacheItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    if ( _SJCacheFolderPath() )
+        [_SJCacheItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[NSFileManager defaultManager] removeItemAtPath:obj error:nil];
         }];
     
-    if ( _DBResumeDataFolderPath() )
-        [_DBResumeDataItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    if ( _SJResumeDataFolderPath() )
+        [_SJResumeDataItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[NSFileManager defaultManager] removeItemAtPath:obj error:nil];
         }];
 }
 
 /**
- *  以缓存的大小
+ *  已缓存的大小
  */
 - (NSInteger)diskAudioCacheSize {
     
     __block NSInteger size = 0;
-    if ( _DBCacheFolderPath() ) {
-        [_DBCacheItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    if ( _SJCacheFolderPath() ) {
+        [_SJCacheItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSDictionary<NSFileAttributeKey, id> *dict = [[NSFileManager defaultManager] attributesOfItemAtPath:obj error:nil];
             size += [dict[NSFileSize] integerValue] / 1000 / 1000;
         }];
     }
     
-    if ( _DBResumeDataFolderPath() ) {
-        [_DBResumeDataItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    if ( _SJResumeDataFolderPath() ) {
+        [_SJResumeDataItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSDictionary<NSFileAttributeKey, id> *dict = [[NSFileManager defaultManager] attributesOfItemAtPath:obj error:nil];
             size += [dict[NSFileSize] integerValue];
         }];
@@ -260,7 +260,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     return size;
 }
 
-- (NSString *)_DBGetAudioPlayerItemPathMemoryHashKey {
+- (NSString *)_SJGetAudioPlayerItemPathMemoryHashKey {
     
     NSString *ItemPath = self.audioPlayer.url.absoluteString;
     if ( !ItemPath ) return nil;
@@ -276,18 +276,18 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     return URLHashStr;
 }
 
-- (void)_DBClearTimer {
+- (void)_SJClearTimer {
     [self.checkAudioTimeTimer invalidate];
     _checkAudioTimeTimer = nil;
 }
 
 // MARK: Observers
 
-- (void)_DBAddObservers {
+- (void)_SJAddObservers {
     [self addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)_DBRemoveObservers {
+- (void)_SJRemoveObservers {
     [self removeObserver:self forKeyPath:@"rate"];
 }
 
@@ -302,7 +302,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
 
 - (void)_SJAudioPlayerInitialize {
     
-    if ( !_DBFolderExists() ) _DBCreateFolder();
+    if ( !_SJFolderExists() ) _SJCreateFolder();
     
     self.rate = 1;
     
@@ -315,7 +315,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
 /**
  *  定时器事件
  */
-- (void)_DBCheckAudioTime {
+- (void)_SJCheckAudioTime {
     if ( !self.audioPlayer ) return;
     
     NSTimeInterval currentTime = self.audioPlayer.currentTime;
@@ -324,7 +324,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     
     if ( totalTime < 5 ) return;
     
-    NSString *hashStr = [self _DBGetAudioPlayerItemPathMemoryHashKey];
+    NSString *hashStr = [self _SJGetAudioPlayerItemPathMemoryHashKey];
     if ( hashStr )
         reachableTime = [self.reachableTimeDictM[hashStr] integerValue];
     else reachableTime = self.audioPlayer.duration;
@@ -343,7 +343,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     return self.audioPlayer.isPlaying;
 }
 
-- (void)_DBPlayLocalCacheWithURLStr:(NSString *)URLStr {
+- (void)_SJPlayLocalCacheWithURLStr:(NSString *)URLStr {
     
     __weak typeof(self) _self = self;
     [self.oprationQueue addOperationWithBlock:^{
@@ -355,13 +355,13 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
         
         if ( [URLStr hasPrefix:@"file"] )
             contentsURL = [NSURL URLWithString:URLStr];
-        else contentsURL = [NSURL fileURLWithPath:_DBCachePathWithURLStr(URLStr)];
+        else contentsURL = [NSURL fileURLWithPath:_SJCachePathWithURLStr(URLStr)];
         
-        [self _DBPlayWithFileURL:contentsURL];
+        [self _SJPlayWithFileURL:contentsURL];
     }];
 }
 
-- (void)_DBPlayWithFileURL:(NSURL *)fileURL {
+- (void)_SJPlayWithFileURL:(NSURL *)fileURL {
     
     @synchronized (self) {
         
@@ -400,7 +400,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
 }
 
 
-- (void)_DBStartDownloadWithURLStr:(NSString *)URLStr {
+- (void)_SJStartDownloadWithURLStr:(NSString *)URLStr {
     
     NSURL *URL = [NSURL URLWithString:URLStr];
     
@@ -408,7 +408,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     
     NSURLSessionDownloadTask *task = nil;
     
-    task = self.audioDownloadTaskDictM[_DBHashStr(URLStr)];
+    task = self.audioDownloadTaskDictM[_SJHashStr(URLStr)];
     
     if ( task ) [task cancel];
     
@@ -418,19 +418,19 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     
     [task resume];
     
-    self.audioDownloadTaskDictM[_DBHashStr(URLStr)] = task;
+    self.audioDownloadTaskDictM[_SJHashStr(URLStr)] = task;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.tmpDownloadingItemPathDictM[_DBHashStr(URLStr)] = _DBDownloadingItemPath();
+        self.tmpDownloadingItemPathDictM[_SJHashStr(URLStr)] = _SJDownloadingItemPath();
     });
 }
 
-- (void)_DBClearMemoryDictCacheWithURLStr:(NSString *)URLStr {
-    NSString *hashStr = _DBHashStr(URLStr);
-    [self _DBClearMemoryDictCacheWithURLHashStr:hashStr];
+- (void)_SJClearMemoryDictCacheWithURLStr:(NSString *)URLStr {
+    NSString *hashStr = _SJHashStr(URLStr);
+    [self _SJClearMemoryDictCacheWithURLHashStr:hashStr];
 }
 
-- (void)_DBClearMemoryDictCacheWithURLHashStr:(NSString *)hashStr {
+- (void)_SJClearMemoryDictCacheWithURLHashStr:(NSString *)hashStr {
     NSURLSessionDownloadTask *task = self.audioDownloadTaskDictM[hashStr];
     if ( task.state != NSURLSessionTaskStateCompleted && task.state != NSURLSessionTaskStateCanceling) [task cancel];
     self.audioDownloadTaskDictM[hashStr] = nil;
@@ -438,7 +438,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     self.reachableTimeDictM[hashStr] = nil;
 }
 
-- (NSString *)_DBCurrentPlayItemDownloadHashURLStr {
+- (NSString *)_SJCurrentPlayItemDownloadHashURLStr {
     NSString *ItemPath = self.audioPlayer.url.absoluteString;
     if ( !ItemPath ) return nil;
     if ( [ItemPath hasPrefix:@"file"] ) /* file:// */ ItemPath = [ItemPath substringFromIndex:7];
@@ -502,7 +502,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
 
 - (YYTimer *)checkAudioTimeTimer {
     if ( nil == _checkAudioTimeTimer) {
-        _checkAudioTimeTimer = [YYTimer timerWithTimeInterval:0.1 target:self selector:@selector(_DBCheckAudioTime) repeats:YES];
+        _checkAudioTimeTimer = [YYTimer timerWithTimeInterval:0.1 target:self selector:@selector(_SJCheckAudioTime) repeats:YES];
         [_checkAudioTimeTimer fire];
     }
     return _checkAudioTimeTimer;
@@ -510,44 +510,44 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
 
 // MARK: File Path
 
-BOOL _DBFolderExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_DBFolderPath()];}
+BOOL _SJFolderExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_SJFolderPath()];}
 
-BOOL _DBCacheFolderExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_DBCacheFolderPath()];}
+BOOL _SJCacheFolderExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_SJCacheFolderPath()];}
 
-BOOL _DBReusmeDataFolderExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_DBResumeDataFolderPath()];}
+BOOL _SJReusmeDataFolderExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_SJResumeDataFolderPath()];}
 
-BOOL _DBCacheExistsWithURLStr(NSString *URLStr) { return [[NSFileManager defaultManager] fileExistsAtPath:_DBCachePathWithURLStr(URLStr)];}
+BOOL _SJCacheExistsWithURLStr(NSString *URLStr) { return [[NSFileManager defaultManager] fileExistsAtPath:_SJCachePathWithURLStr(URLStr)];}
 
-BOOL _DBAppleTmpDownloadCacheDataExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_NSURLSessionTmpFolderPath()];}
+BOOL _SJAppleTmpDownloadCacheDataExists() { return [[NSFileManager defaultManager] fileExistsAtPath:_NSURLSessionTmpFolderPath()];}
 
 /**
  *  ../com.dancebaby.lanwuzhe.audioCacheFolder/
  */
 
-NSString *_DBFolderPath() {
+NSString *_SJFolderPath() {
     NSString *sCachePath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
     NSString *folderPath = [sCachePath stringByAppendingPathComponent:@"com.dancebaby.lanwuzhe.audioCacheFolder"];
     return folderPath;
 }
 
-NSString *_DBCacheFolderPath() { return [_DBFolderPath() stringByAppendingPathComponent:@"cache"];}
+NSString *_SJCacheFolderPath() { return [_SJFolderPath() stringByAppendingPathComponent:@"cache"];}
 
-NSString *_DBResumeDataFolderPath() { return [_DBFolderPath() stringByAppendingPathComponent:@"resumeData"];}
+NSString *_SJResumeDataFolderPath() { return [_SJFolderPath() stringByAppendingPathComponent:@"resumeData"];}
 
 /**
  *  Root Cache + cache + resumeData
  */
-void _DBCreateFolder() {
-    [[NSFileManager defaultManager] createDirectoryAtPath:_DBCacheFolderPath() withIntermediateDirectories:YES attributes:nil error:nil];
-    [[NSFileManager defaultManager] createDirectoryAtPath:_DBResumeDataFolderPath() withIntermediateDirectories:YES attributes:nil error:nil];
+void _SJCreateFolder() {
+    [[NSFileManager defaultManager] createDirectoryAtPath:_SJCacheFolderPath() withIntermediateDirectories:YES attributes:nil error:nil];
+    [[NSFileManager defaultManager] createDirectoryAtPath:_SJResumeDataFolderPath() withIntermediateDirectories:YES attributes:nil error:nil];
 }
 
 /**
  *  ../com.dancebaby.lanwuzhe.audioCacheFolder/cache/StrHash
  */
-NSString *_DBCachePathWithURLStr(NSString *URLStr) {
-    NSString *cacheName = [_DBHashStr(URLStr) stringByAppendingString:@".mp3"];
-    return [_DBCacheFolderPath() stringByAppendingPathComponent:cacheName];
+NSString *_SJCachePathWithURLStr(NSString *URLStr) {
+    NSString *cacheName = [_SJHashStr(URLStr) stringByAppendingString:@".mp3"];
+    return [_SJCacheFolderPath() stringByAppendingPathComponent:cacheName];
 }
 
 /**
@@ -560,7 +560,7 @@ NSString *_NSURLSessionTmpFolderPath() {
     return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:pathComponent];
 }
 
-NSString *_DBDownloadingItemPath() {
+NSString *_SJDownloadingItemPath() {
     NSString *tmpFolder = _NSURLSessionTmpFolderPath();
     NSArray<NSString *> *items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:tmpFolder error:nil];
     
@@ -586,11 +586,11 @@ NSString *_DBDownloadingItemPath() {
     return newItemPath;
 }
 
-NSArray<NSString *> *_DBCacheItemPaths() { return _DBContentsOfPath(_DBCacheFolderPath());}
+NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJCacheFolderPath());}
 
-NSArray<NSString *> *_DBResumeDataItemPaths() { return _DBContentsOfPath(_DBResumeDataFolderPath());}
+NSArray<NSString *> *_SJResumeDataItemPaths() { return _SJContentsOfPath(_SJResumeDataFolderPath());}
 
-NSArray<NSString *> *_DBContentsOfPath(NSString *path) {
+NSArray<NSString *> *_SJContentsOfPath(NSString *path) {
     NSArray *paths = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
     NSMutableArray<NSString *> *itemPaths = [NSMutableArray new];
     [paths enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -599,7 +599,7 @@ NSArray<NSString *> *_DBContentsOfPath(NSString *path) {
     return itemPaths;
 }
 
-NSString *_DBHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", [str hash]];}
+NSString *_SJHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", [str hash]];}
 
 @end
 
@@ -615,7 +615,7 @@ NSString *_DBHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", 
     NSLog(@"\n-下载完成: %@", URLStr);
 #endif
     
-    NSString *cachePath = _DBCachePathWithURLStr(URLStr);
+    NSString *cachePath = _SJCachePathWithURLStr(URLStr);
     
     BOOL moveResult = [[NSFileManager defaultManager] moveItemAtPath:location.path toPath:cachePath error:nil];
     
@@ -629,7 +629,7 @@ NSString *_DBHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", 
     
     if ( !fileURL ) return;
     
-    [self _DBPlayWithFileURL:fileURL];
+    [self _SJPlayWithFileURL:fileURL];
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(nullable NSError *)error {
@@ -641,12 +641,12 @@ NSString *_DBHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", 
 #endif
     
     NSString *URLStr = task.currentRequest.URL.absoluteString;
-    [self _DBClearMemoryDictCacheWithURLStr:URLStr];
+    [self _SJClearMemoryDictCacheWithURLStr:URLStr];
 }
 
-- (void)_DBClearDiskDownloadingCacheWithURLStr:(NSString *)URLStr {
+- (void)_SJClearDiskDownloadingCacheWithURLStr:(NSString *)URLStr {
     
-    NSString *itemPath = self.tmpDownloadingItemPathDictM[_DBHashStr(URLStr)];
+    NSString *itemPath = self.tmpDownloadingItemPathDictM[_SJHashStr(URLStr)];
     
     if ( !itemPath ) return;
     
@@ -669,22 +669,22 @@ NSString *_DBHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", 
     
     CGFloat reachableTime = self.audioPlayer.duration * progress;
     
-    self.reachableTimeDictM[_DBHashStr(URLStr)] = @(reachableTime);
+    self.reachableTimeDictM[_SJHashStr(URLStr)] = @(reachableTime);
     
     if ( [self.delegate respondsToSelector:@selector(audioPlayer:audioDownloadProgress:)] )
         [self.delegate audioPlayer:self audioDownloadProgress:progress];
     
     if ( self.userClickedPause ) return;
     
-    if ( progress > SJAudioWhenToStartPlaying ) [self _DBReadyPlayDownloadingAudio:URLStr];
+    if ( progress > SJAudioWhenToStartPlaying ) [self _SJReadyPlayDownloadingAudio:URLStr];
     
 }
 
-- (void)_DBReadyPlayDownloadingAudio:(NSString *)URLStr {
+- (void)_SJReadyPlayDownloadingAudio:(NSString *)URLStr {
     
     if ( self.audioPlayer.isPlaying ) return;
     
-    NSString *ItemPath = _tmpDownloadingItemPathDictM[_DBHashStr(URLStr)];
+    NSString *ItemPath = _tmpDownloadingItemPathDictM[_SJHashStr(URLStr)];
     
     if ( !ItemPath ) return;
     
@@ -692,7 +692,7 @@ NSString *_DBHashStr(NSString *str) { return [NSString stringWithFormat:@"%zd", 
     
     if ( !fileURL ) return;
     
-    [self _DBPlayWithFileURL:fileURL];
+    [self _SJPlayWithFileURL:fileURL];
 }
 
 /*!

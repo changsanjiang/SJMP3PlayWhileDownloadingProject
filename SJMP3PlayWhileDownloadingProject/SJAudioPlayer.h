@@ -66,7 +66,7 @@ extern NSString *const SJAudioPlayerDownloadAudioIdentifier;
 - (void)clearDiskAudioCache;
 
 /*!
- *  以缓存的audios的大小
+ *  已缓存的audios的大小
  */
 - (NSInteger)diskAudioCacheSize;
 
