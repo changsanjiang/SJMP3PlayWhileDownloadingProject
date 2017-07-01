@@ -20,6 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"\n%@", NSHomeDirectory());
 
     self.player = [SJAudioPlayer player];
     

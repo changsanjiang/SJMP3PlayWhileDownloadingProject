@@ -253,7 +253,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
     if ( _SJResumeDataFolderPath() ) {
         [_SJResumeDataItemPaths() enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSDictionary<NSFileAttributeKey, id> *dict = [[NSFileManager defaultManager] attributesOfItemAtPath:obj error:nil];
-            size += [dict[NSFileSize] integerValue];
+            size += [dict[NSFileSize] integerValue] / 1000 / 1000;;
         }];
     }
     
@@ -385,7 +385,7 @@ static NSMutableDictionary<NSString *, void (^)()> *_completionHandlerDictionary
         
 #ifdef DBugLog
         NSLog(@"\n-开始播放\n-持续时间: %f 秒\n-播放地址为: %@", self.audioPlayer.duration, fileURL);
-        NSLog(@"\n-线程: %@", [NSThread currentThread]);
+        NSLog(@"\n-线程: %@ \n", [NSThread currentThread]);
 #endif
         if ( self.audioPlayer.duration < 5 ) return;
         
