@@ -13,22 +13,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const SJAudioPlayerDownloadAudioIdentifier;
 
+@protocol SJAudioPlayerPlayProtocol;
 
 @protocol SJAudioPlayerDelegate;
 
-
-
 @interface SJAudioPlayer : NSObject
 
-@property (nonatomic, weak) id<SJAudioPlayerDelegate> delegate;
+@property (nonatomic, weak,   readwrite) id<SJAudioPlayerDelegate> delegate;
 
 @property (nonatomic, assign, readwrite) CGFloat rate;
 
 @property (nonatomic, strong, readonly) NSString *currentPlayingURLStr;
 
 @property (nonatomic, assign, readonly) BOOL playStatus;
-
-@property (nonatomic, strong, readonly, class) NSMutableDictionary<NSString *, void (^)()> *completionHandlerDictionary;
 
 /*!
  *  初始化
@@ -69,6 +66,20 @@ extern NSString *const SJAudioPlayerDownloadAudioIdentifier;
  *  已缓存的audios的大小
  */
 - (NSInteger)diskAudioCacheSize;
+
+/*!
+ *  查看音乐是否已缓存
+ */
+- (BOOL)checkMusicHasBeenCachedWithPlayURL:(NSString *)playURL;
+
+@end
+
+
+@protocol SJAudioPlayerPlayProtocol <NSObject>
+
+@required
+
+@property (nonatomic, strong) NSString *playUrl;
 
 @end
 
