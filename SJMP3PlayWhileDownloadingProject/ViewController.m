@@ -25,13 +25,11 @@
     self.player = [SJAudioPlayer player];
     
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        /*!
-         *  App Transport Security policy
-         */
-        [self.player playAudioWithPlayURL:@"http://audio.cdn.lanwuzhe.com/1492776280608c177"];
+    /*!
+     *  App Transport Security policy
+     */
+    [self.player playAudioWithPlayURL:@"http://audio.cdn.lanwuzhe.com/1492776280608c177"];
 
-    });
     
     // Do any additional setup after loading the view, typically from a nib.
 }
