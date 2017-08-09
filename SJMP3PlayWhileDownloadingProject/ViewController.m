@@ -30,7 +30,7 @@
      */
     [self.player playAudioWithPlayURL:@"http://audio.cdn.lanwuzhe.com/1492776280608c177"];
 
-    
+
     // Do any additional setup after loading the view, typically from a nib.
 }
 
