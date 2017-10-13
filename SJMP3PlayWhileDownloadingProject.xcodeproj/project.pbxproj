@@ -13,9 +13,6 @@
 		7740561F1EFA628800713440 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7740561D1EFA628800713440 /* Main.storyboard */; };
 		774056211EFA628800713440 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 774056201EFA628800713440 /* Assets.xcassets */; };
 		774056241EFA628800713440 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 774056221EFA628800713440 /* LaunchScreen.storyboard */; };
-		774056311EFA62B500713440 /* NSObject+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 774056301EFA62B500713440 /* NSObject+Extension.m */; };
-		774056341EFA62BE00713440 /* YYTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 774056331EFA62BE00713440 /* YYTimer.m */; };
-		774056371EFA62CE00713440 /* NSDate+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 774056361EFA62CE00713440 /* NSDate+Extension.m */; };
 		7740563B1EFA635800713440 /* SJAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740563A1EFA635800713440 /* SJAudioPlayer.m */; };
 /* End PBXBuildFile section */
 
@@ -30,12 +27,6 @@
 		774056201EFA628800713440 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		774056231EFA628800713440 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		774056251EFA628800713440 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7740562F1EFA62B500713440 /* NSObject+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Extension.h"; sourceTree = "<group>"; };
-		774056301EFA62B500713440 /* NSObject+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Extension.m"; sourceTree = "<group>"; };
-		774056321EFA62BE00713440 /* YYTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYTimer.h; sourceTree = "<group>"; };
-		774056331EFA62BE00713440 /* YYTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYTimer.m; sourceTree = "<group>"; };
-		774056351EFA62CE00713440 /* NSDate+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Extension.h"; sourceTree = "<group>"; };
-		774056361EFA62CE00713440 /* NSDate+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Extension.m"; sourceTree = "<group>"; };
 		774056391EFA635800713440 /* SJAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJAudioPlayer.h; sourceTree = "<group>"; };
 		7740563A1EFA635800713440 /* SJAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJAudioPlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,22 +88,8 @@
 			children = (
 				774056391EFA635800713440 /* SJAudioPlayer.h */,
 				7740563A1EFA635800713440 /* SJAudioPlayer.m */,
-				774056321EFA62BE00713440 /* YYTimer.h */,
-				774056331EFA62BE00713440 /* YYTimer.m */,
-				774056381EFA62D600713440 /* Categories */,
 			);
 			name = Files;
-			sourceTree = "<group>";
-		};
-		774056381EFA62D600713440 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				7740562F1EFA62B500713440 /* NSObject+Extension.h */,
-				774056301EFA62B500713440 /* NSObject+Extension.m */,
-				774056351EFA62CE00713440 /* NSDate+Extension.h */,
-				774056361EFA62CE00713440 /* NSDate+Extension.m */,
-			);
-			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,13 +164,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				774056371EFA62CE00713440 /* NSDate+Extension.m in Sources */,
 				7740561C1EFA628800713440 /* ViewController.m in Sources */,
 				774056191EFA628800713440 /* AppDelegate.m in Sources */,
-				774056311EFA62B500713440 /* NSObject+Extension.m in Sources */,
 				774056161EFA628800713440 /* main.m in Sources */,
 				7740563B1EFA635800713440 /* SJAudioPlayer.m in Sources */,
-				774056341EFA62BE00713440 /* YYTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +291,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DB5B5F2RH5;
 				INFOPLIST_FILE = SJMP3PlayWhileDownloadingProject/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.SanJiang.SJMP3PlayWhileDownloadingProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -331,6 +306,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SJMP3PlayWhileDownloadingProject/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.SanJiang.SJMP3PlayWhileDownloadingProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -357,6 +333,7 @@
 				7740562A1EFA628800713440 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
