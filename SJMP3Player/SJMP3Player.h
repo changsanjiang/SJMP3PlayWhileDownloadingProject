@@ -1,5 +1,5 @@
 //
-//  SJAudioPlayer.h
+//  SJMP3Player.h
 //  SJMP3PlayWhileDownloadingProject
 //
 //  Created by BlueDancer on 2017/6/21.
@@ -12,13 +12,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SJAudioPlayerPlayProtocol;
+@protocol SJMP3PlayerPlayProtocol;
 
-@protocol SJAudioPlayerDelegate;
+@protocol SJMP3PlayerDelegate;
 
-@interface SJAudioPlayer : NSObject
+@interface SJMP3Player : NSObject
 
-@property (nonatomic, weak,   readwrite) id<SJAudioPlayerDelegate> delegate;
+/*!
+ *  default if No. */
+@property (nonatomic, assign, readwrite) BOOL enableDBUG;
+
+@property (nonatomic, weak,   readwrite) id<SJMP3PlayerDelegate> delegate;
 
 @property (nonatomic, assign, readwrite) CGFloat rate;
 
@@ -65,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@protocol SJAudioPlayerPlayProtocol <NSObject>
+@protocol SJMP3PlayerPlayProtocol <NSObject>
 
 @required
 
@@ -74,15 +78,15 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@protocol SJAudioPlayerDelegate <NSObject>
+@protocol SJMP3PlayerDelegate <NSObject>
 
 @optional
 
-- (void)audioPlayer:(SJAudioPlayer *)player audioDownloadProgress:(CGFloat)progress;
+- (void)audioPlayer:(SJMP3Player *)player audioDownloadProgress:(CGFloat)progress;
 
-- (void)audioPlayer:(SJAudioPlayer *)player currentTime:(NSTimeInterval)currentTime reachableTime:(NSTimeInterval)reachableTime totalTime:(NSTimeInterval)totalTime;
+- (void)audioPlayer:(SJMP3Player *)player currentTime:(NSTimeInterval)currentTime reachableTime:(NSTimeInterval)reachableTime totalTime:(NSTimeInterval)totalTime;
 
-- (void)audioPlayerDidFinishPlaying:(SJAudioPlayer *)player;
+- (void)audioPlayerDidFinishPlaying:(SJMP3Player *)player;
 
 @end
 

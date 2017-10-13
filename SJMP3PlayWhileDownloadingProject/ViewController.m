@@ -7,11 +7,11 @@
 //
 
 #import "ViewController.h"
-#import "SJAudioPlayer.h"
+#import "SJMP3Player.h"
 
 @interface ViewController ()
 
-@property (nonatomic, strong) SJAudioPlayer *player;
+@property (nonatomic, strong) SJMP3Player *player;
 
 @end
 
@@ -22,7 +22,7 @@
     
     NSLog(@"\n%@", NSHomeDirectory());
 
-    self.player = [SJAudioPlayer player];
+    self.player = [SJMP3Player player];
     
 
     /*!

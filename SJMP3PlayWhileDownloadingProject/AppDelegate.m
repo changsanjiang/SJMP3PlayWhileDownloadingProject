@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "SJAudioPlayer.h"
 
 @interface AppDelegate ()
 

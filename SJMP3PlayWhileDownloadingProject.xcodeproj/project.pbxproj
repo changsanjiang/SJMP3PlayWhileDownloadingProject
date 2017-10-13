@@ -13,7 +13,7 @@
 		7740561F1EFA628800713440 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7740561D1EFA628800713440 /* Main.storyboard */; };
 		774056211EFA628800713440 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 774056201EFA628800713440 /* Assets.xcassets */; };
 		774056241EFA628800713440 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 774056221EFA628800713440 /* LaunchScreen.storyboard */; };
-		7740563B1EFA635800713440 /* SJAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740563A1EFA635800713440 /* SJAudioPlayer.m */; };
+		77C802031F90DC39006F6FCB /* SJMP3Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C802021F90DC34006F6FCB /* SJMP3Player.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +27,8 @@
 		774056201EFA628800713440 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		774056231EFA628800713440 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		774056251EFA628800713440 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		774056391EFA635800713440 /* SJAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJAudioPlayer.h; sourceTree = "<group>"; };
-		7740563A1EFA635800713440 /* SJAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJAudioPlayer.m; sourceTree = "<group>"; };
+		77C802011F90DC34006F6FCB /* SJMP3Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SJMP3Player.h; path = SJMP3Player/SJMP3Player.h; sourceTree = SOURCE_ROOT; };
+		77C802021F90DC34006F6FCB /* SJMP3Player.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SJMP3Player.m; path = SJMP3Player/SJMP3Player.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,8 +86,8 @@
 		7740562B1EFA629000713440 /* Files */ = {
 			isa = PBXGroup;
 			children = (
-				774056391EFA635800713440 /* SJAudioPlayer.h */,
-				7740563A1EFA635800713440 /* SJAudioPlayer.m */,
+				77C802011F90DC34006F6FCB /* SJMP3Player.h */,
+				77C802021F90DC34006F6FCB /* SJMP3Player.m */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -166,8 +166,8 @@
 			files = (
 				7740561C1EFA628800713440 /* ViewController.m in Sources */,
 				774056191EFA628800713440 /* AppDelegate.m in Sources */,
+				77C802031F90DC39006F6FCB /* SJMP3Player.m in Sources */,
 				774056161EFA628800713440 /* main.m in Sources */,
-				7740563B1EFA635800713440 /* SJAudioPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
