@@ -17,26 +17,21 @@ NSString *const SJAudioPlayerDownloadAudioIdentifier = @"com.dancebaby.lanwuzhe.
 
 /**
  *  0.00 - 1.00
- *  If it's 1.00, play after download.
- */
-#define SJAudioWhenToStartPlaying   (0.05)
+ *  If it's 1.00, play after download. */
+#define SJAudioWhenToStartPlaying   (0.1)
 
 /*!
- *  网路环境差 导致的停止播放 延迟多少秒继续播放
- */
+ *  网路环境差 导致的停止播放 延迟多少秒继续播放 */
 #define SJAudioDelayTime (2)
-
-
-
 
 
 // MARK: File Path
 
 /*!
- *  查看目录是否存在 */
-static BOOL _SJFolderExists(NSString *path) { return [[NSFileManager defaultManager] fileExistsAtPath:path];}
+ *  查看某个目录是否存在 */
+inline static BOOL _SJFolderExists(NSString *path) { return [[NSFileManager defaultManager] fileExistsAtPath:path];}
 
-static NSString *_SJHashStr(NSString *URLStr) {
+inline static NSString *_SJHashStr(NSString *URLStr) {
     if ( !URLStr ) return nil;
     return [NSString stringWithFormat:@"%zd", [URLStr hash]];
 }
@@ -44,7 +39,7 @@ static NSString *_SJHashStr(NSString *URLStr) {
 /**
  *  缓存根目录
  *  ../com.dancebaby.lanwuzhe.audioCacheFolder/ */
-static NSString *_SJAudioCacheRootFolder() {
+inline static NSString *_SJAudioCacheRootFolder() {
     NSString *sCachePath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
     NSString *folderPath = [sCachePath stringByAppendingPathComponent:@"com.dancebaby.lanwuzhe.audioCacheFolder"];
     return folderPath;
@@ -53,25 +48,25 @@ static NSString *_SJAudioCacheRootFolder() {
 /*!
  *  临时缓存目录
  *  tmp/audioTmpFolder */
-static NSString *_SJAudioDownloadingTmpFolder() {
+inline static NSString *_SJAudioDownloadingTmpFolder() {
     return [NSTemporaryDirectory() stringByAppendingPathComponent:@"audioTmpFolder"];
 }
 
 /*!
  *  临时缓存路径
  * tmp/audioTmpFolder/urlStrHash */
-static NSString *_SJAudioDownloadingTmpPath(NSString *URLStr) {
+inline static NSString *_SJAudioDownloadingTmpPath(NSString *URLStr) {
     return [_SJAudioDownloadingTmpFolder() stringByAppendingPathComponent:_SJHashStr(URLStr)];
 }
 
 /*!
  *  缓存目录
  *  ../com.dancebaby.lanwuzhe.audioCacheFolder/cache */
-static NSString *_SJAudioCacheFolderPath() { return [_SJAudioCacheRootFolder() stringByAppendingPathComponent:@"cache"];}
+inline static NSString *_SJAudioCacheFolderPath() { return [_SJAudioCacheRootFolder() stringByAppendingPathComponent:@"cache"];}
 
 /**
  *  /var/../com.dancebaby.lanwuzhe.audioCacheFolder/cache/StrHash */
-static NSString *_SJAudioCachePathWithURLStr(NSString *URLStr) {
+inline static NSString *_SJAudioCachePathWithURLStr(NSString *URLStr) {
     NSString *cacheName = [_SJHashStr(URLStr) stringByAppendingString:@".mp3"];
     NSString *cachePath = [_SJAudioCacheFolderPath() stringByAppendingPathComponent:cacheName];
     if ( cachePath ) return cachePath;
@@ -80,11 +75,11 @@ static NSString *_SJAudioCachePathWithURLStr(NSString *URLStr) {
 
 /*!
  *  查看缓存是否存在 */
-static BOOL _SJAudioCacheExistsWithURLStr(NSString *URLStr) { return [[NSFileManager defaultManager] fileExistsAtPath:_SJAudioCachePathWithURLStr(URLStr)];}
+inline static BOOL _SJAudioCacheExistsWithURLStr(NSString *URLStr) { return [[NSFileManager defaultManager] fileExistsAtPath:_SJAudioCachePathWithURLStr(URLStr)];}
 
 /*!
  *  根据文件路径查看缓存是否存在 */
-static BOOL _SJCacheExistsWithFileURLStr(NSString *fileURLStr) {
+inline static BOOL _SJCacheExistsWithFileURLStr(NSString *fileURLStr) {
     if ( [fileURLStr hasPrefix:@"file://"] ) fileURLStr = [fileURLStr substringFromIndex:7];
     NSString *dataName = fileURLStr.lastPathComponent;
     if ( !dataName ) return NO;
@@ -93,7 +88,7 @@ static BOOL _SJCacheExistsWithFileURLStr(NSString *fileURLStr) {
 
 /**
  *  Root Folder */
-static void _SJCreateFolder() {
+inline static void _SJCreateFolder() {
     
     NSString *cacheFolder = _SJAudioCacheFolderPath();
     if ( !_SJFolderExists(cacheFolder) ) [[NSFileManager defaultManager] createDirectoryAtPath:cacheFolder withIntermediateDirectories:YES attributes:nil error:nil];
@@ -102,7 +97,7 @@ static void _SJCreateFolder() {
     if ( !_SJFolderExists(tmpFolder) ) [[NSFileManager defaultManager] createDirectoryAtPath:tmpFolder withIntermediateDirectories:YES attributes:nil error:nil];
 }
 
-static NSArray<NSString *> *_SJContentsOfPath(NSString *path) {
+inline static NSArray<NSString *> *_SJContentsOfPath(NSString *path) {
     NSArray *paths = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
     NSMutableArray<NSString *> *itemPaths = [NSMutableArray new];
     [paths enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -111,7 +106,7 @@ static NSArray<NSString *> *_SJContentsOfPath(NSString *path) {
     return itemPaths;
 }
 
-static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAudioCacheFolderPath());}
+inline static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAudioCacheFolderPath());}
 
 
 
@@ -121,13 +116,10 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 @interface NSURLSessionTask (SJAudioPlayerAdd)
 
 @property (nonatomic, strong, readwrite) NSOutputStream *outputStream;
-
 @property (nonatomic, strong, readonly) NSString *requestURLStr;
 @property (nonatomic, strong, readonly) NSString *tmpPath;
-
 @property (nonatomic, assign, readwrite) long long totalSize;
 @property (nonatomic, assign, readwrite) long long downloadSize;
-
 @property (nonatomic, assign, readonly) float downloadProgress;
 
 @end
@@ -216,9 +208,12 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 @interface SJAudioPlayer (NSURLSessionDelegateMethos) <NSURLSessionDelegate>
 
 /*!
- *  到达播放点
- */
+ *  到达播放点 */
 @property (nonatomic, assign, readwrite) BOOL isStartPlaying;
+
+/*!
+ *  下载完毕 */
+@property (nonatomic, assign, readwrite) BOOL isDownloaded;
 
 @end
 
@@ -300,27 +295,35 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
  *  播放
  */
 - (void)playAudioWithPlayURL:(NSString *)playURL {
-    if ( nil == playURL ) return;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ( [self.delegate respondsToSelector:@selector(audioPlayer:currentTime:reachableTime:totalTime:)] ) [self.delegate audioPlayer:self currentTime:0 reachableTime:0 totalTime:0];
-    });
-    
-    [self stop];
-    
-    self.userClickedPause = NO;
-    
-    self.currentPlayingURLStr = playURL;
-    
-    self.isStartPlaying = NO;
-    
-    if ( _SJAudioCacheExistsWithURLStr(playURL) || [playURL hasPrefix:@"file"]  ) {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        if ( nil == playURL || 0 == playURL.length ) return;
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ( ![self.delegate respondsToSelector:@selector(audioPlayer:audioDownloadProgress:)] ) return;
-            [self.delegate audioPlayer:self audioDownloadProgress:1];
+            if ( [self.delegate respondsToSelector:@selector(audioPlayer:currentTime:reachableTime:totalTime:)] ) [self.delegate audioPlayer:self currentTime:0 reachableTime:0 totalTime:0];
         });
-        [self _SJPlayLocalCacheWithURLStr:playURL];
-    }
-    else [self _SJStartDownloadWithURLStr:playURL];
+        
+        [self stop];
+        
+        self.userClickedPause = NO;
+        
+        self.currentPlayingURLStr = playURL;
+        
+        self.isStartPlaying = NO;
+        
+        if ( _SJAudioCacheExistsWithURLStr(playURL) || [[NSURL URLWithString:playURL] isFileURL] ) {
+            [self _SJPlayLocalCacheWithURLStr:playURL];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ( ![self.delegate respondsToSelector:@selector(audioPlayer:audioDownloadProgress:)] ) return;
+                [self.delegate audioPlayer:self audioDownloadProgress:1];
+            });
+        }
+        else {
+            [self _SJStartDownloadWithURLStr:playURL];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ( ![self.delegate respondsToSelector:@selector(audioPlayer:audioDownloadProgress:)] ) return;
+                [self.delegate audioPlayer:self audioDownloadProgress:0];
+            });
+        }
+    });
 }
 
 /**
@@ -373,17 +376,12 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
  *  停止播放, 停止缓存
  */
 - (void)stop {
-    
     self.userClickedPause = YES;
-    
-    if ( !self.audioPlayer ) return;
-    
+    self.isStartPlaying = NO;
     [self _SJClearMemoryCache];
-    
+    [self _SJClearTimer];
     [_audioPlayer stop];
     _audioPlayer = nil;
-    
-    [self _SJClearTimer];
 }
 
 /**
@@ -478,19 +476,20 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 }
 
 // MARK: 因为网络环境差 而导致的暂停播放 处理
-
+static BOOL delay;
 - (void)_SJCheckAudioIsPlayingTimer {
     if ( nil == self.audioPlayer ) return;
     if ( self.userClickedPause ) return;
     if ( self.audioPlayer.isPlaying ) return;
-    
+    if ( !delay ) return;
+    delay = YES;
     // 如果暂停,  ? 秒后 再次初始化
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(SJAudioDelayTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        delay = NO;
         if ( self.userClickedPause ) return;
         if ( self.audioPlayer.isPlaying ) return;
         /*!
-         *  再次初始化
-         */
+         *  再次初始化 */
         NSString *itemTmpPath = self.currentTask.tmpPath;
         NSURL *filePathURL = nil;
         
@@ -501,6 +500,7 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 }
 
 - (void)_SJPlayLocalCacheWithURLStr:(NSString *)URLStr {
+    self.isDownloaded = YES;
     __weak typeof(self) _self = self;
     [self.oprationQueue addOperationWithBlock:^{
         __strong typeof(_self) self = _self;
@@ -548,26 +548,29 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
         if ( ![audioPlayer prepareToPlay] ) return;
         
         audioPlayer.delegate = self;
+        
+        if ( 5 < audioPlayer.duration ) {
+            [audioPlayer play];
+            if ( 0 != currentTime ) audioPlayer.currentTime = currentTime;
+            audioPlayer.rate = self.rate;
+            self.audioPlayer = audioPlayer;
+            self.isStartPlaying = YES;
+            
 #ifdef SJDBugLog
-        NSLog(@"\n-开始播放\n-持续时间: %f 秒\n-播放地址为: %@ ",
-              audioPlayer.duration,
-              fileURL);
-        NSLog(@"\n-线程: %@", [NSThread currentThread]);
-        if ( [[UIDevice currentDevice].systemVersion integerValue] >= 10 ) {
-            NSLog(@"\n-格式%@", audioPlayer.format);
-        }
+            NSLog(@"\n-开始播放\n-持续时间: %f 秒\n-播放地址为: %@ ",
+                  audioPlayer.duration,
+                  fileURL);
+            NSLog(@"\n-线程: %@", [NSThread currentThread]);
+            if ( [[UIDevice currentDevice].systemVersion integerValue] >= 10 ) {
+                NSLog(@"\n-格式%@", audioPlayer.format);
+            }
 #endif
-        [audioPlayer play];
+        }
         
-        if ( 0 != currentTime ) audioPlayer.currentTime = currentTime;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self _SJEnableTimer];
+        });
         
-        audioPlayer.rate = self.rate;
-        
-        self.audioPlayer = audioPlayer;
-        
-        self.isStartPlaying = YES;
-        
-        [self _SJEnableTimer];
     }
 }
 
@@ -586,7 +589,7 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
     NSURLSessionDataTask *task = [self.audioCacheSession dataTaskWithRequest:[NSURLRequest requestWithURL:URL]];;
     
     if ( !task ) return;
-
+    
     _currentTask = task;
     
     [task resume];
@@ -594,10 +597,10 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 #ifdef SJDBugLog
     NSLog(@"\n准备下载: %@ \n" , URLStr);
 #endif
+    self.isDownloaded = NO;
 }
 
 - (void)_SJClearBeforeDownloadTask {
-    if ( !_currentTask ) return;
     [_currentTask.outputStream close];
     _currentTask.outputStream = nil;
     [_currentTask cancel];
@@ -670,6 +673,7 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 @implementation SJAudioPlayer (NSURLSessionDelegateMethos)
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSHTTPURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
+    self.isDownloaded = NO;
     dataTask.outputStream = [NSOutputStream outputStreamToFileAtPath:dataTask.tmpPath append:NO];
     [dataTask.outputStream open];
     dataTask.totalSize = response.expectedContentLength;
@@ -681,7 +685,7 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
     if ( 0 == data.length ) return;
     dataTask.downloadSize += data.length;
     [dataTask.outputStream write:data.bytes maxLength:data.length];
-
+    
 #ifdef SJDBugLog
     NSLog(@"\n-%@\n-写入大小: %zd - 文件大小: %zd - 下载进度: %f \n",
           dataTask.requestURLStr,
@@ -698,7 +702,7 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
     if ( !self.isStartPlaying && (dataTask.downloadProgress > SJAudioWhenToStartPlaying) ) {
         [self _SJReadyPlayDownloadingAudio:dataTask];
     }
-
+    
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionDataTask *)dataTask didCompleteWithError:(NSError *)error {
@@ -714,12 +718,14 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
         return;
     }
 #endif
-
+    
     NSString *URLStr = dataTask.currentRequest.URL.absoluteString;
-
+    
 #ifdef SJDBugLog
     NSLog(@"\n-下载完成: %@", URLStr);
 #endif
+    
+    self.isDownloaded = YES;
     
     NSString *cachePath = _SJAudioCachePathWithURLStr(URLStr);
     
@@ -755,6 +761,14 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
     objc_setAssociatedObject(self, @selector(isStartPlaying), @(isStartPlaying), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (BOOL)isDownloaded {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setIsDownloaded:(BOOL)isDownloaded {
+    objc_setAssociatedObject(self, @selector(isDownloaded), @(isDownloaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 // MARK: 准备播放
 
 - (void)_SJReadyPlayDownloadingAudio:(NSURLSessionDataTask *)task {
@@ -785,7 +799,9 @@ static NSArray<NSString *> *_SJCacheItemPaths() { return _SJContentsOfPath(_SJAu
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
     
     if ( [self.currentPlayingURLStr hasPrefix:@"http"] ) {
-        if ( 1 > _currentTask.downloadProgress ) return;
+        /*!
+         *  如果未下载完毕 */
+        if ( !self.isDownloaded ) return;
     }
     
 #ifdef SJDBugLog

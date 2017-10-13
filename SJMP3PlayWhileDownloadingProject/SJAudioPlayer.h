@@ -27,48 +27,39 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL playStatus;
 
 /*!
- *  初始化
- */
+ *  初始化 */
 + (instancetype)player;
 
 /*!
- *  播放
- */
+ *  播放 */
 - (void)playAudioWithPlayURL:(NSString *)playURL;
 
 /*!
- *  从指定的进度播放
- */
+ *  从指定的进度播放 */
 - (void)setPlayProgress:(float)progress;
 
 /*!
- *  暂停
- */
+ *  暂停 */
 - (void)pause;
 
 /*!
- *  恢复播放
- */
+ *  恢复播放 */
 - (void)resume;
 
 /*!
- *  停止播放, 停止缓存
- */
+ *  停止播放, 停止缓存 */
 - (void)stop;
 
 /*!
- *  清除本地缓存
- */
+ *  清除本地缓存 */
 - (void)clearDiskAudioCache;
 
 /*!
- *  已缓存的audios的大小
- */
+ *  已缓存的audios的大小 */
 - (NSInteger)diskAudioCacheSize;
 
 /*!
- *  查看音乐是否已缓存
- */
+ *  查看音乐是否已缓存 */
 - (BOOL)checkMusicHasBeenCachedWithPlayURL:(NSString *)playURL;
 
 @end
